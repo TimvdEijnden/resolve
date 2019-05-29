@@ -118,4 +118,30 @@ test('node-modules-paths', function (t) {
 
         t.end();
     });
+
+    t.test('combine paths correctly on Windows', function (t) {
+        // Test proper paths
+        var start = 'C:\\Users\\username\\myProject\\src';
+        var paths = [];
+        var moduleDirectories = ['node_modules', start];
+        var dirs = nodeModulesPaths(start, { paths: paths, moduleDirectory: moduleDirectories });
+
+        t.equal(dirs.includes(path.resolve(start)), true, 'should contain start dir');
+
+        t.end();
+    });
+
+    // Does not work on Windows so skipping it there
+    if (process.platform !== 'win32') {
+        t.test('combine paths correctly on macOs', function (t) {
+            var start = '/Users/username/git/myProject/src';
+            var paths = [];
+            var moduleDirectories = ['node_modules', '/Users/username/git/myProject/src'];
+            var dirs = nodeModulesPaths(start, { paths: paths, moduleDirectory: moduleDirectories });
+
+            t.equal(dirs.includes(path.resolve(start)), true, 'should contain start dir');
+
+            t.end();
+        });
+    }
 });
